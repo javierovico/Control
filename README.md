@@ -9,11 +9,17 @@
 
 ##Instalacion
  - Primero modificar el archivo config/database.php para configurar la base de datos
- 
+ - php artisan passport:keys --force  (para la migracion cliente not found https://stackoverflow.com/questions/55168808/passport-laravel-createtoken-personal-access-client-not-found )
 ##Pasos Seguidos
  - composer require laravel/passport
  - php artisan migrate
  - php artisan passport:install
+ - la demas configuracionesta en el git y en https://dev.to/abdoumjr/laravel-passport-create-rest-api-with-authentication-5enk
+ - para depurar poner en la cabezera de la peticion: 
+ https://medium.com/@cvallejo/sistema-de-autenticaci%C3%B3n-api-rest-con-laravel-5-6-240be1f3fc7d 
+ Content-Type: application/json
+ X-Requested-With: XMLHttpRequest
+ 
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
