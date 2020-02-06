@@ -45,15 +45,15 @@ class AuthController extends Controller
         if ($request->remember_me) {
             $token->expires_at = Carbon::now()->addWeeks(1);
         }else{
-            $token->expires_at = Carbon::now()->addDay(1);
+            $token->expires_at = Carbon::now()->addDays(1);
         }
         $token->save();
         return response()->json([
             'access_token' => $tokenResult->accessToken,
-            'token_type'   => 'Bearer',
-//            'es_doctor'    => ($user->doctor)!=null,
-//            'es_admin'     => ($user->admin)!=null,
-//            'cedula'        => $user->cedula,
+//            'token_type'   => 'Bearer',
+            'success'       => true,
+            'status'        => 200,
+            'error'         => null,
             'id'            => $user->id,
             'expires_at'   => Carbon::parse(
                 $tokenResult->token->expires_at)

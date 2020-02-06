@@ -36,14 +36,14 @@ class ControladorPrincipal extends Controller
             }else{  //el unico que no es validable es el gerente
 
             }
-            /** Primero guardamos los datos del empleado (si fuese necesario) **/
             try{        //realizamos toda la accion en un try para manejar los errores (en este caso pueden producirse errores al insertar duplicados (restringido por base de dato))
+                /** Primero guardamos los datos del empleado (si fuese necesario) **/
                 $empleado->guardarseSiNoExiste();
+                /** Ahora independientemente si el empleado llego tarde o no, se guarda en el registro de la base de datos **/
+                $marcacion->guardarseSiNoExiste();
             }catch (\Exception $exception){
                 return response()->json(['success'=>false,'error' => $exception->getMessage()],403);
             }
-            /** Ahora independientemente si el empleado llego tarde o no, se guarda en el registro de la base de datos **/
-            $marcacion->guardarseSiNoExiste();
         }
         return response()->json(['success' => true, 'mensaje'=>'se crearon los registros','informeArchivo'=>$empleadosTardios]);
     }
