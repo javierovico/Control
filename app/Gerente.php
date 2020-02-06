@@ -9,6 +9,12 @@ class Gerente extends Empleado {
     public $area = null;
 
     /**
+     * Estas constantes son para la personalizacion de los "atributos" de un empleado (en este caso director, personal, etc)
+     */
+    public const PARAMETRO_SOBRESUELDO = 'sobresueldo';
+    public const PARAMETRO_AREA = 'area';
+
+    /**
      * @return int
      */
     public function getSobresueldo(): int
@@ -46,7 +52,10 @@ class Gerente extends Empleado {
      */
     public function __construct($nombre,$apellido,$legajo)
     {
-        parent::__construct($nombre,$apellido,$legajo,false,0);
+        parent::__construct($nombre,$apellido,$legajo,false,0,Empleado::TIPO_GERENTE,[
+            self::PARAMETRO_SOBRESUELDO => '0',
+            self::PARAMETRO_AREA => '',
+        ]);
     }
 
 

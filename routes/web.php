@@ -11,7 +11,4 @@
 |
 */
 
-Route::get('/', function () {
-//    return view('welcome');
-    \App\Main::recorrer();
-});
+Route::get('/', 'ControladorPrincipal@recorrer');

@@ -87,7 +87,7 @@ class Marcacion extends Model
                     break;
             }
             //llegado hasta aca tenemos el empleado y la clasificacionDelEmpleado (que por polimorfismo, al extender todas de la clase Models, tiene el mismo metodo save() que lo que hace es guardarle en la base de datos
-            $fecha = date('Y-m-d H:m',strtotime($datosRecogido->fecha . ' ' . $datosRecogido->hora));
+            $fecha = date('Y-m-d H:i',\DateTime::createFromFormat('d/m/Y',$datosRecogido->fecha));
             if(strpos($fecha,'1970-')!==false){ //error en la fecha
 
             }else{

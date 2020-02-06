@@ -12,11 +12,22 @@ class PersonalServicio extends Empleado implements Validable {
     public $montoInsalubridad = 0;
 
     /**
+     * Estas constantes son para la personalizacion de los "atributos" de un empleado (en este caso director, personal, etc)
+     */
+    public const PARAMETRO_LLEGADAS_TARDIA = 'llegadas_tardias';
+    public const PARAMETRO_COBRA_INSALUBRIDAD = 'cobra_insalubridad';
+    public const PARAMETRO_MONTO_INSALUBRIDAD = 'monto_insalubridad';
+
+    /**
      * PersonalServicio constructor.
      */
     public function __construct($nombre,$apellido,$legajo)
     {
-        parent::__construct($nombre,$apellido,$legajo,false,0);
+        parent::__construct($nombre,$apellido,$legajo,false,0,Empleado::TIPO_PERSONAL_SERVICIO,[
+            self::PARAMETRO_LLEGADAS_TARDIA => '0',
+            self::PARAMETRO_COBRA_INSALUBRIDAD => '0',
+            self::PARAMETRO_MONTO_INSALUBRIDAD => '0'
+        ]);
     }
 
     /**
@@ -67,10 +78,12 @@ class PersonalServicio extends Empleado implements Validable {
         $this->montoInsalubridad = $montoInsalubridad;
     }
 
-    public function validar($fecha): bool
+    public function validar($hora): bool
     {
-        $maximaTolerancia = new \DateTime('2000-01-01 ' . Marcacion::HORARIO_ENTRADA);  //solo vamos a tomar as horas y minutos
-        $maximaTolerancia = $maximaTolerancia->format('H:m');
-        return ((date('H:m',strtotime($fecha))) > ( $maximaTolerancia ));
+        $maximaTolerancia = new \DateTime( Marcacion::HORARIO_ENTRADA);  //solo vamos a tomar as horas y minutos
+        $maximaTolerancia = $maximaTolerancia->format('H:i');       //convertir a string formateado
+        return ((date('H:i',strtotime($hora))) > ( $maximaTolerancia ));
     }
+
+
 }

@@ -6,6 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Registro extends Model
 {
-    protected $fillable = ['legajo','fecha','tardio','minutos_tarde'];   //para poder agregarse
+    protected $fillable = ['legajo','fecha','hora','tardio','minutos_tarde'];   //para poder agregarse
     public $timestamps = false;
 }

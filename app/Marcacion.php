@@ -4,39 +4,60 @@
 namespace App;
 
 
-class Marcacion
+use Illuminate\Database\Eloquent\Model;
+
+class Marcacion implements GuardadoEnBase
 {
 
     const ARCHIVO = "C:/Marcaciones.txt";
     const HORARIO_ENTRADA = '08:00';
-    public $fechaHoraMarcacion = null;
+
+    public $fechaMarcacion = null;
+    public $horaMarcacion = null;
     public $empleado = null;
 
     /**
+     * @return null
+     */
+    public function getHoraMarcacion()
+    {
+        return $this->horaMarcacion;
+    }
+
+    /**
+     * @param null $horaMarcacion
+     */
+    public function setHoraMarcacion($horaMarcacion): void
+    {
+        $this->horaMarcacion = $horaMarcacion;
+    }
+
+    /**
      * Marcacion constructor.
-     * @param null $fechaHoraMarcacion
+     * @param null $fechaMarcacion
      * @param null $empleado
      */
-    public function __construct($fechaHoraMarcacion, $empleado)
+    public function __construct($fechaMarcacion,$horaMarcacion, $empleado)
     {
-        $this->fechaHoraMarcacion = $fechaHoraMarcacion;
+        $this->fechaMarcacion = $fechaMarcacion;
+        $this->horaMarcacion = $horaMarcacion;
         $this->empleado = $empleado;
     }
 
     /**
      * @return null
      */
-    public function getFechaHoraMarcacion()
+    public function getfechaMarcacion()
     {
-        return $this->fechaHoraMarcacion;
+        return $this->fechaMarcacion;
     }
 
     /**
-     * @param null $fechaHoraMarcacion
+     * @param null $fechaMarcacion
      */
-    public function setFechaHoraMarcacion($fechaHoraMarcacion): void
+    public function setfechaMarcacion($fechaMarcacion): void
     {
-        $this->fechaHoraMarcacion = $fechaHoraMarcacion;
+        $this->fechaMarcacion = $fechaMarcacion;
     }
 
     /**
@@ -60,7 +81,7 @@ class Marcacion
      * Lee las marcaciones desde un archivo depositado en C:/Marcaciones.txt
      * y las retorna en un array de marcaciones
      */
-    public static function leerMarcaciones(){
+    public static function leerMarcaciones() : array {
         $marcacionesArray = array();
         $recurso = fopen(self::ARCHIVO,'r');
         $datosRecogidos = array();  //almacena todos los datos recogidos en bruto del archivo
@@ -92,13 +113,57 @@ class Marcacion
                     $empleado = new PersonalServicio($datosRecogido->nombre,$datosRecogido->apellido,$datosRecogido->legajo);
                     break;
             }
-            $fecha = date('Y-m-d H:m',strtotime($datosRecogido->fecha . ' ' . $datosRecogido->hora));
-            if(strpos($fecha,'1970-')===false){ //fecha correcta
-                $marcacionNueva = new Marcacion($fecha,$empleado);
+            $fechaMarcacion = date('Y-m-d',\DateTime::createFromFormat('d/m/Y',$datosRecogido->fecha)->getTimestamp());
+            $horaMarcacion = date('H:i',strtotime($datosRecogido->fecha . ' ' . $datosRecogido->hora));
+            if(strpos($fechaMarcacion,'1970-')===false){ //fecha correcta
+                $marcacionNueva = new Marcacion($fechaMarcacion,$horaMarcacion,$empleado);
                 $marcacionesArray[] = $marcacionNueva;
             }
         }
         return $marcacionesArray;
     }
 
+    /**
+     * @inheritDoc
+     * @throws \Throwable
+     */
+    public function guardarseSiNoExiste(): bool
+    {
+        $marcacionBD = $this->retornarInstanciaBD();
+        throw_if($marcacionBD != null,new \Exception('esta marcacion esta repetida, no se puede seguir con datos corruptos'));
+        $marcacionBD = new \App\ModelosBaseDato\Registro([
+            'legajo' => $this->empleado->legajo,
+            'fecha'     => $this->fechaMarcacion,
+            'hora'      => $this->horaMarcacion,
+            'tardio'    => ($this->empleado instanceof Validable)?($this->empleado->validar($this->horaMarcacion)):false,
+            'minutos_tarde' => $this->calcularMinutosTarde()
+        ]);
+        $marcacionBD->save();
+        return true;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function retornarInstanciaBD()
+    {
+        return \App\ModelosBaseDato\Registro::where('legajo','=',$this->empleado->legajo)->where('fecha','=',$this->fechaMarcacion)->first();
+    }
+
+    /**
+     * Calcula que tan tarde llego el empleado
+     */
+    private function calcularMinutosTarde() : int
+    {
+        if(($this->empleado instanceof Validable) && $this->empleado->validar($this->horaMarcacion)){
+            $maximaTolerancia = new \DateTime( Marcacion::HORARIO_ENTRADA);  //solo vamos a tomar as horas y minutos
+            if($this->empleado->tieneTolerancia){
+                $maximaTolerancia->add(new \DateInterval('PT' . $this->empleado->minutosTolerancia . 'M'));
+            }
+            $maximaTolerancia = $maximaTolerancia->format('H:i');
+            return abs((strtotime($maximaTolerancia) - strtotime($this->horaMarcacion))/60);
+        }else{  //no llego tarde (o es el gerente)
+            return 0;
+        }
+    }
 }

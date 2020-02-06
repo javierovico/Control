@@ -7,7 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Empleado extends Model
 {
 
-    protected $fillable = ['legajo','nombre','apellido','tieneTolerancia','minutosTolerancia','user_id'];   //para poder agregarse
+    protected $primaryKey = 'legajo';
+    public $incrementing = false;
+    protected $keyType = 'integer';
+    protected $fillable = ['legajo','nombre','apellido','tiene_tolerancia','minutos_tolerancia','tipo_empleado_id'];   //para poder agregarse
     public $timestamps = false;
     /**
      * conexion con su clase padre

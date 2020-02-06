@@ -10,5 +10,5 @@ interface Validable{
     /**
      * @return bool Deve devolver true si se llego tarde?
      */
-    public function validar($fecha) : bool;
+    public function validar($hora) : bool;
 }
