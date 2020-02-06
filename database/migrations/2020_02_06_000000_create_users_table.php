@@ -14,7 +14,9 @@ class CreateUsersTable extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->bigIncrements('id');        //el identificador del user
+            $table->integer('legajo')->nullable();  //puede tener o no asignado un empleado
+            $table->foreign('legajo')->references('legajo')->on('empleados');
             $table->string('usuario',200)->unique();
             $table->string('password');
             $table->rememberToken();

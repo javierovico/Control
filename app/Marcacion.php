@@ -23,6 +23,38 @@ class Marcacion
         $this->empleado = $empleado;
     }
 
+    /**
+     * @return null
+     */
+    public function getFechaHoraMarcacion()
+    {
+        return $this->fechaHoraMarcacion;
+    }
+
+    /**
+     * @param null $fechaHoraMarcacion
+     */
+    public function setFechaHoraMarcacion($fechaHoraMarcacion): void
+    {
+        $this->fechaHoraMarcacion = $fechaHoraMarcacion;
+    }
+
+    /**
+     * @return null
+     */
+    public function getEmpleado()
+    {
+        return $this->empleado;
+    }
+
+    /**
+     * @param null $empleado
+     */
+    public function setEmpleado($empleado): void
+    {
+        $this->empleado = $empleado;
+    }
+
 
     /**
      * Lee las marcaciones desde un archivo depositado en C:/Marcaciones.txt

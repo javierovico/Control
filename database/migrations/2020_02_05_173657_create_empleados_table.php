@@ -14,16 +14,13 @@ class CreateEmpleadosTable extends Migration
     public function up()
     {
         Schema::create('empleados', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->integer('legajo')->unique();    //seria como el id ?
+            $table->integer('legajo')->primary();    //seria como el id ?
             $table->string('nombre',200);
             $table->string('apellido',200);
+            $table->integer('tipo_empleado_id');    //notese que es not null
+            $table->foreign('tipo_empleado_id')->references('id')->on('tipo_empleados');
             $table->boolean('tieneTolerancia')->default(false); //Aparentemente es un campo calculado (true si minutosTolerancia >0)
             $table->integer('minutosTolerancia')->default(0);
-            //podria asignarle un usuario a cada empleado, pero vamos a separar esto, ya que no tenemos datos suficientes para la creacion de usuarios (contrasenhas)
-            //por lo que la tabla de "users" solo se destinara para la autenticacion en la plataforma
-//            $table->unsignedBigInteger('user_id');
-//            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

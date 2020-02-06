@@ -12,6 +12,54 @@ class Director extends Empleado implements Validable {
     public $cantidadSubordinados = 0;
 
     /**
+     * @return int
+     */
+    public function getCantidadLlegadasTardias(): int
+    {
+        return $this->cantidadLlegadasTardias;
+    }
+
+    /**
+     * @param int $cantidadLlegadasTardias
+     */
+    public function setCantidadLlegadasTardias(int $cantidadLlegadasTardias): void
+    {
+        $this->cantidadLlegadasTardias = $cantidadLlegadasTardias;
+    }
+
+    /**
+     * @return null
+     */
+    public function getDepartamento()
+    {
+        return $this->departamento;
+    }
+
+    /**
+     * @param null $departamento
+     */
+    public function setDepartamento($departamento): void
+    {
+        $this->departamento = $departamento;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCantidadSubordinados(): int
+    {
+        return $this->cantidadSubordinados;
+    }
+
+    /**
+     * @param int $cantidadSubordinados
+     */
+    public function setCantidadSubordinados(int $cantidadSubordinados): void
+    {
+        $this->cantidadSubordinados = $cantidadSubordinados;
+    }
+
+    /**
      * Director constructor.
      */
     public function __construct($nombre, $apellido, $legajo)
