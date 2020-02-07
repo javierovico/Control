@@ -19,9 +19,9 @@ class CreateTipoEmpleados extends Migration
             $table->string('nominacion',200);   // 'gerente', 'personal_servicio','director' hasta ahora
         });
         $nominaciones = [
-            Empleado::TIPO_GERENTE              =>        'gerente',
-            Empleado::TIPO_PERSONAL_SERVICIO    =>        'personal_servicio',
-            Empleado::TIPO_DIRECTOR             =>        'director'
+            Empleado::TIPO_GERENTE              =>        'Gerente',
+            Empleado::TIPO_PERSONAL_SERVICIO    =>        'Personal de Servicio',
+            Empleado::TIPO_DIRECTOR             =>        'Director'
         ];
         foreach ($nominaciones as $key=>$nominacion){
             DB::table('tipo_empleados')->insert([

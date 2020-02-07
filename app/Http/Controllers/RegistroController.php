@@ -17,10 +17,10 @@ class RegistroController extends Controller
     public function index(Request $request)
     {
         $request->validate([
-            'legajo'        => 'required|integer',
+            'legajo'        => 'integer',
             'fechaInicio'   => 'date_format:Y-m-d',
             'fechaFin'      => 'date_format:Y-m-d',
-            'sinEmpleado'   => 'integer',       //si es true, no retorna empleados
+            'todosLosRegistros' => 'integer'    //por si se quieran generar todos los registros de una
         ]);
         $legajo = $request->legajo;
         $fechaInicio = $request->fechaInicio;
@@ -29,10 +29,57 @@ class RegistroController extends Controller
             $fechaInicio = Carbon::now()->format('Y-m-d');
             $fechaFin = Carbon::now()->format('Y-m-d');
         }
-        $registros = Registro::whereBetween('fecha',[$fechaInicio,$fechaFin])->get();   //obtiene los registros
+        try{
+            if($request->todosLosRegistros){
+                $registros = Registro::all();
+            }else{
+                $registros = Registro::whereBetween('fecha',[$fechaInicio,$fechaFin]);
+                if($legajo!=null){      //si es filtrado por usuario
+                    $registros = $registros->where('legajo','=',$legajo);
+                }
+                $registros = $registros->get();
+            }
+            return [
+                'success'=>true,
+                'mensaje'=>"Registros dentro del rango $fechaInicio y $fechaFin" . (($legajo)?" del legajo $legajo":""),
+                'cantidadRegistroEncontrado' =>count($registros),
+                'registros'=>$registros
+            ];
+        }catch (\Exception $e){
+            return [
+                'success'   => false,
+                'mensaje' => $e->getMessage()
+            ];
+        }
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function libre(Request $request)
+    {
+        $request->validate([
+            'legajo'        => 'integer',
+            'fechaInicio'   => 'date_format:Y-m-d',
+            'fechaFin'      => 'date_format:Y-m-d'
+        ]);
+        $legajo = $request->legajo;
+        $fechaInicio = $request->fechaInicio;
+        $fechaFin = $request->fechaFin;
+        $registros = Registro::where('legajo','>','0');
+        if($fechaInicio != null && $fechaFin != null){
+            $registros->whereBetween('fecha',[$fechaInicio,$fechaFin]);
+        }
+        if($legajo){
+            $registros->where('legajo','=',$legajo);
+        }
+        $registros = $registros->get();
         return [
             'success'=>true,
-            'mensaje'=>"Registros dentro del rango $fechaInicio y $fechaFin",
+            'mensaje'=>"Registros dentro del rango $fechaInicio y $fechaFin" . (($legajo)?" del legajo $legajo":""),
             'cantidadRegistroEncontrado' =>count($registros),
             'registros'=>$registros
         ];

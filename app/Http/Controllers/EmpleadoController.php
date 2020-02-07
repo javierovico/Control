@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\ModelosBaseDato\Empleado;
+use App\ModelosBaseDato\Registro;
+use App\ModelosBaseDato\TipoEmpleado;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class EmpleadoController extends Controller
@@ -10,15 +14,39 @@ class EmpleadoController extends Controller
      * Display a listing of the resource.
      *
      * @param Request $request
-     * @return void
+     * @return array
      */
     public function index(Request $request)
     {
-        $request->validate([
-            'fechaInicio' => 'date_format:Y-m-d',
-            'fechaFin' => 'date_format:Y-m-d',
-            'sinEmpleado'   => 'integer',       //si es true, no retorna empleados
-        ]);
+        try{
+            $empleados = Empleado::with('atributos')->get();
+            return [
+                'success'   => true,
+                'empleados' => $empleados
+            ];
+        }catch (\Exception $e){
+            return [
+                'success'   => false,
+                'mensaje' => $e->getMessage()
+            ];
+        }
+    }
+
+    public function tipoEmpleado(Request $request)
+    {
+
+        try{
+            $tipos = TipoEmpleado::all();
+            return [
+                'success'   => true,
+                'tipos' => $tipos
+            ];
+        }catch (\Exception $e){
+            return [
+                'success'   => false,
+                'mensaje' => $e->getMessage()
+            ];
+        }
     }
 
     /**

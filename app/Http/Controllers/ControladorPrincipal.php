@@ -12,11 +12,29 @@ class ControladorPrincipal extends Controller
      * Handle the incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return array
      */
     public function __invoke(Request $request)
     {
-        //
+        $marcaciones = app('App\Http\Controllers\RegistroController')->index($request);
+        $empleados = app('App\Http\Controllers\EmpleadoController')->index($request);
+        $tipoEmpleado = app('App\Http\Controllers\EmpleadoController')->tipoEmpleado($request);
+        return [
+            'marcaciones'   => $marcaciones,
+            'empleados'     => $empleados,
+            'tipo_empleado' => $tipoEmpleado,
+        ];
+    }
+
+    public function libre(Request $request){
+        $marcaciones = app('App\Http\Controllers\RegistroController')->libre($request);
+        $empleados = app('App\Http\Controllers\EmpleadoController')->index($request);
+        $tipoEmpleado = app('App\Http\Controllers\EmpleadoController')->tipoEmpleado($request);
+        return [
+            'marcaciones'   => $marcaciones,
+            'empleados'     => $empleados,
+            'tipo_empleado' => $tipoEmpleado,
+        ];
     }
 
     public function recorrer(){

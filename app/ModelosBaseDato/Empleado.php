@@ -19,4 +19,8 @@ class Empleado extends Model
     public function user(){
         return $this->hasOne('App\User');
     }
+
+    public function atributos(){
+        return $this->hasMany('App\ModelosBaseDato\ParametroEmpleado','legajo_id','legajo');
+    }
 }

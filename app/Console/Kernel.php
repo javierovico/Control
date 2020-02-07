@@ -24,8 +24,15 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        $schedule->call(function (){
+            echo app('App\Http\Controllers\ControladorPrincipal')->recorrer();
+        })->weeklyOn(1, '17:00');
+        $schedule->call(function (){
+            echo app('App\Http\Controllers\ControladorPrincipal')->recorrer();
+        })->weeklyOn(3, '17:00');
+        $schedule->call(function (){
+            echo app('App\Http\Controllers\ControladorPrincipal')->recorrer();
+        })->weeklyOn(5, '17:00');
     }
 
     /**

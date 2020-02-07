@@ -26,4 +26,6 @@ Route::group(['prefix' => 'auth'], function () {
 
 Route::group(['middleware' => 'auth:api'], function() {
     Route::resource('registro', 'RegistroController');
+    Route::get('consulta', 'ControladorPrincipal');
+    Route::get('libre', 'ControladorPrincipal@libre');
 });
